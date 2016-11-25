@@ -1,0 +1,7 @@
+size:25
+tiled1path:tiles/ground.png
+tiled2path:tiles/spawnplayer.png
+tiled3path:tiles/endmap.png
+tiled4path:tiles/blockenemy.png
+tiled5path:tiles/spawnenemy1.png
+tiled6path:tiles/star.png
