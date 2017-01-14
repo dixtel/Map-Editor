@@ -9,10 +9,10 @@
 
 Button::Button(sf::Vector2f position, sf::Vector2f size, std::string text, const unsigned int value) {
 
-	normalTexture.loadFromFile("buttonnormal.png");
-	clickedTexture.loadFromFile("buttonclicked.png");
+	normalTexture.loadFromFile("image/buttonnormal.png");
+	clickedTexture.loadFromFile("image/buttonclicked.png");
 
-	font.loadFromFile("RobotoMono-Bold.ttf");
+	font.loadFromFile("font/RobotoMono-Bold.ttf");
 
 	this -> normal.setSize(size);
 	this -> normal.setTexture(&normalTexture);

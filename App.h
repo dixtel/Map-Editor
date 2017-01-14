@@ -8,19 +8,32 @@
 #ifndef APP_H_
 #define APP_H_
 
-#include "TiledManager.h"
 #include <string>
+#include <iostream>
+#include <sstream>
 #include <SFML/Window.hpp>
 
+#include "TiledManager.h"
+#include "GUI.h"
+#include "Render.h"
+#include "Map.h"
+
 class App {
-	int widthMap;
-	int heightMap;
+	unsigned int editorWidth;
+	unsigned int editorHeight;
+	unsigned int menuHeight;
 	int selectedTiledNumber;
+	std::string pathToMap;
 
 	TiledManager *tiledManager;
+	GUI *gui;
+	Render *render;
+	Map *map;
 
+	std::string ToString(unsigned int num);
+	std::string GetTime( std::string type );
 public:
-	App( const int widthMap, const int heightMap, const std::string pathToTiledPreferences  );
+	App( const int editorWidth, const int editorHeight, const int menuHeight );
 	~App();
 	void Start();
 };

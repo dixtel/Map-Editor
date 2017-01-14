@@ -16,7 +16,8 @@ class File {
 public:
 	File();
 	~File();
-	std::vector <std::string>  GetFile( const std::string pathToFile );
+	std::vector <std::string> GetFile( const std::string pathToFile );
+	bool SaveFileToTextFile( std::vector <std::string> text, std::string pathFile );
 };
 
 #endif /* FILE_H_ */

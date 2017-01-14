@@ -8,7 +8,7 @@
 #include "Render.h"
 
 Render::Render(const int width, const int height, const std::string title, sf::Font font) {
-	this -> window = new sf::RenderWindow(sf::VideoMode(width, height), title);
+	this -> window = new sf::RenderWindow(sf::VideoMode(width, height), title, sf::Style::Titlebar);
 	this -> font = font;
 }
 
@@ -36,9 +36,9 @@ void Render::DrawText(const std::string text, sf::Vector2f position) {
 	window -> draw(textToDraw);
 }
 
-void Render::Draw(std::vector <sf::RectangleShape*> object) {
+void Render::Draw(std::vector <sf::RectangleShape> object) {
 	for(unsigned int i = 0; i < object.size(); ++i ) {
-		window -> draw( *object[i] );
+		window -> draw( object[i] );
 	}
 }
 

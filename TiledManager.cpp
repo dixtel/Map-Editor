@@ -7,24 +7,24 @@
 
 #include "TiledManager.h"
 
-TiledManager::TiledManager( const std::string pathToTiledPreferences ) {
-	this -> pathToTiledPreferences = &pathToTiledPreferences;
-	this -> errorLoadfile = false;
+TiledManager::TiledManager( const std::string tilePath, const unsigned int width, const unsigned int height ) {
+	this -> tilePath = &tilePath;
+	this -> errorLoadFile = false;
 	this -> margin = 0;
 
-	LoadPreferences( pathToTiledPreferences );
+	LoadPreferences( tilePath );
 }
 
 TiledManager::~TiledManager() {
 
 }
 
-void TiledManager::LoadPreferences( const std::string pathToTiledPreferences ) {
+void TiledManager::LoadPreferences( const std::string tilePath ) {
 	File file;
-	std::vector <std::string> allPreferences = file.GetFile( pathToTiledPreferences );
+	std::vector <std::string> allPreferences = file.GetFile( tilePath );
 
 	if( allPreferences.empty() ) {
-		errorLoadfile = true;
+		errorLoadFile = true;
 	}
 
 	std::string margin = allPreferences[0].substr( allPreferences[0].find(':') + 1 );
@@ -45,34 +45,68 @@ void TiledManager::LoadPreferences( const std::string pathToTiledPreferences ) {
 	}
 }
 
-void TiledManager::CreateTiled( sf::Vector2i pos, const unsigned int numberTiled ) {
-	if( !(numberTiled >= 0 && numberTiled <= textureTiles.size()) ) return;
+bool TiledManager::CreateTiled( sf::Vector2i pos, const unsigned int numberTiled ) {
+	if( !(numberTiled > 0 && numberTiled <= textureTiles.size()) ) return false;
 
 	int x = int(pos.x / margin) * margin;
 	int y = int(pos.y / margin) * margin;
 
 	for(unsigned int i = 0; i < tiles.size(); ++i ) {
-		sf::Vector2f posTile = tiles[i] -> getPosition();
-		if( posTile.x == x && posTile.y  == y) return;
+		sf::Vector2f posTile = tiles[i] -> Get().getPosition();
+		if( posTile.x == x && posTile.y == y) {
+			if(tiles[i] -> GetValue() == numberTiled) {
+				return false;
+			}
+			else {
+				DelateTiled(pos);
+			}
+		}
 	}
 
-	tiles.push_back( new sf::RectangleShape );
-	tiles[ (tiles.size() - 1 ) ] -> setSize( sf::Vector2f(margin + 50, margin));
-	tiles[ (tiles.size() - 1 ) ] -> setPosition( sf::Vector2f(x, y));
-	tiles[ (tiles.size() - 1 ) ] -> setTexture(textureTiles[numberTiled]);
+	tiles.push_back( new Tile(sf::Vector2f(x, y), sf::Vector2f(margin, margin), numberTiled, textureTiles[numberTiled - 1]) );
+
+	return true;
 }
 
-void TiledManager::Delatetiled( sf::Vector2i pos ) {
+bool TiledManager::DelateTiled( sf::Vector2i pos ) {
 	for(unsigned int i = 0; i < tiles.size(); ++i) {
-		sf::Vector2f positionTile = tiles[i] -> getPosition();
-		if(pos.x >= positionTile.x && pos.x <= (positionTile.x + margin) && pos.y >= positionTile.y && pos.y <= (positionTile.y + margin)) {
+		sf::Vector2f positionTile = tiles[i] -> Get().getPosition();
+		if(pos.x >= positionTile.x && pos.x < (positionTile.x + margin) &&
+				pos.y >= positionTile.y && pos.y < (positionTile.y + margin)) {
 			tiles.erase( tiles.begin() + i );
-			return;
+			return true;
+		}
+	}
+	return false;
+}
+
+std::vector<sf::RectangleShape> TiledManager::GetTiles() {
+	std::vector<sf::RectangleShape> tiles;
+	for (unsigned int i = 0; i < this -> tiles.size(); ++i) {
+		tiles.push_back( this -> tiles[i] -> Get() );
+	}
+	return tiles;
+}
+
+int TiledManager::GetMargin() {
+	return margin;
+}
+
+bool TiledManager::ErrorLoadPreferences() {
+	return errorLoadFile;
+}
+
+void TiledManager::LoadNewTiles(Map* map, unsigned int menuHwight) {
+	tiles.clear();
+
+	for(unsigned int y = 0; y < map -> height; ++y) {
+		for(unsigned int x = 0; x < map -> width; ++x) {
+			if(map -> board[y][x] > 0 && map -> board[y][x] <= textureTiles.size() ) {
+				CreateTiled( sf::Vector2i( int(x * margin), int(y * margin) + menuHwight ), map -> board[y][x] );
+			}
 		}
 	}
 }
 
-std::vector<sf::RectangleShape*> TiledManager::GetTiles() {
-	return tiles;
-}
+
 

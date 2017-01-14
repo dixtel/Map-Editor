@@ -8,17 +8,30 @@
 #ifndef MAP_H_
 #define MAP_H_
 
+#include <iostream>
+
 #include <vector>
-#include "TiledManager.h"
+#include <sstream>
+#include <string>
+#include <stdlib.h>
+
+#include "File.h"
+
 
 class Map {
-	int width;
-	int height;
-	int **map;
+	friend class TiledManager;
+	unsigned int width;
+	unsigned int height;
+	int **board;
 
 public:
-	Map( const int width, const int height, const std::string pathToTiledPreferences );
+	Map( const unsigned int width, const unsigned int height );
 	~Map();
+	void SetTile( const unsigned int x, const unsigned int y, const unsigned int numberTile );
+	void DeleteTile( const unsigned int x, const unsigned int y );
+	bool SaveMap( std::string pathToSaveMap, std::string fileName );
+	bool LoadMap( std::string pathToMap);
+	int **Get();
 };
 
 #endif /* MAP_H_ */

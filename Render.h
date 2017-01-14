@@ -10,6 +10,7 @@
 
 #include <SFML/Window.hpp>
 #include <vector>
+
 #include "GUI.h"
 
 class Render {
@@ -21,7 +22,7 @@ public:
 	void Clear();
 	void Draw(GUI gui);
 	void DrawText(const std::string text, sf::Vector2f position);
-	void Draw(std::vector <sf::RectangleShape*> object);
+	void Draw(std::vector <sf::RectangleShape> object);
 	void Display();
 	sf::RenderWindow *GetWindow();
 
